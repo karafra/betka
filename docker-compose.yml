@@ -1,6 +1,7 @@
 version: '3'
 services:
   mongo:
+    container_name: mongo
     image: mongo
     restart: always
     environment:
@@ -12,8 +13,12 @@ services:
       - database
     expose:
       - 27017
+    volumes:
+      - './volumes/mongo:/data/db'
+
   mongo-express:
     image: mongo-express
+    container_name: mongo-express
     restart: always
     depends_on:
       - mongo
@@ -28,11 +33,13 @@ services:
 
   client:
     image: strompova/d3-client
+    container_name: d3-client
     build:
       context: client
       dockerfile: Dockerfile
     networks:
       - client
+      - server
     depends_on:
       - server
     ports:
@@ -40,19 +47,23 @@ services:
 
   server:
     image: strompova/d3-server
+    container_name: d3-server
     build:
       context: server
       dockerfile: Dockerfile
+      args:
+        MONGO_URI_ARG: mongodb://root:example@mongo:27017/
     networks:
       - server
       - database
     depends_on:
       - mongo
-    environment:
-      MONGO_URI: "mongodb://root:example@mongo:27017/"
     ports:
       - 3000:3000
+    volumes:
+      - './volumes/server:/usr/app/.migrate'
+
 networks:
-  database:
-  client:
-  server:
+  database: {}
+  client: {}
+  server: {}

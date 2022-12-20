@@ -1,6 +1,7 @@
 FROM node:18-alpine AS builder
 
-ARG MOGNO
+ARG MONGO_URI_ARG
+ENV MONGO_URI $MONGO_URI_ARG
 
 WORKDIR /usr/app
 

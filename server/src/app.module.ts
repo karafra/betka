@@ -6,6 +6,9 @@ import { PasswordController } from 'src/controller/password.controller';
 import { RepositoryModule } from 'src/repository/repository.module';
 import { SchemasModule } from 'src/schemas/schemas.module';
 import loader from './config/loader';
+import { WinstonModule } from 'nest-winston';
+import { format, transports } from 'winston';
+import {join} from "path";
 
 @Module({
   imports: [
